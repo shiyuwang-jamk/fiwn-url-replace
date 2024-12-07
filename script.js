@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         New FinnWordNet from HFST omor demo
 // @namespace    http://tampermonkey.net/
-// @version      2024-11-30
+// @version      0.2
 // @description  try to take over the world!
-// @author       You
+// @author       shiyuwang
 // @match        https://kielipankki.fi/cgi-bin/omor/omordemo.bash*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // ==/UserScript==
@@ -36,6 +36,19 @@ function change_links() {
             url.href = fiwn_mod(url.href);
         }
   }
+}
+
+// Why keep the enter input if the server cannot handle
+function enter_submit() {
+  document.getElementById("wf").addEventListener("keypress", e => { // https://stackoverflow.com/questions/8934088/how-to-make-enter-key-in-a-textarea-submit-a-form
+    if (e.key === "Enter" && ! e.shiftkey) {
+      e.preventDefault();
+
+      // https://stackoverflow.com/questions/38323750/jquery-find-equivalent-for-javascript
+      // https://www.w3schools.com/howto/howto_js_trigger_button_enter.asp
+      e.currentTarget.closest("fieldset").querySelectorAll("input")[0].click();
+    }
+  } )
 }
 
 (function () {
