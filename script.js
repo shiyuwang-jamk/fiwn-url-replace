@@ -54,4 +54,5 @@ function enter_submit() {
 (function () {
   "use strict";
   change_links();
+  enter_submit();
 })();
