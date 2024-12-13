@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         New FinnWordNet from HFST omor demo
 // @namespace    http://tampermonkey.net/
-// @version      0.2
-// @description  try to take over the world!
+// @version      0.2.1
+// @description  Replace invalid FinnWordNet query link in the demo with valid ones.
 // @author       shiyuwang
 // @match        https://kielipankki.fi/cgi-bin/omor/omordemo.bash*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
@@ -10,7 +10,8 @@
 
 // const fiwn_regex = new RegExp(/^http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn/g);
 
-const fiwn_keyword = new RegExp(/(?<=http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn\/search\?wn=fi&w=)[\wöä]+(?=&t=over&sm=Search)/g) // https://greasyfork.org/en/scripts/421673-get-all-links
+// v0.2.1: ä, ö escaped, use % instead
+const fiwn_keyword = new RegExp(/(?<=http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn\/search\?wn=fi&w=)[\w%]+(?=&t=over&sm=Search)/g) // https://greasyfork.org/en/scripts/421673-get-all-links
 const base = "https://kielipankki.fi/cgi-bin/fiwn/fiwn.cgi?wn=fi&w=";
 const param = "&t=all&ver=&sm=Search";
 
