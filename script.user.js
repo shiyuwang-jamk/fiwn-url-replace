@@ -20,86 +20,54 @@ const baseWIFI = "https://fi.wiktionary.org/wiki/";
 
 // https://stackoverflow.com/questions/8104242/spread-html-in-multiple-lines-javascript
 
-const logic = '<script>function filter_link(link) {  \n \
-if (!!link.match(fiwn_keyword)) { \n \
-console.log(link.match(fiwn_keyword)); \n \
-return true; \n \
-} \n \
-return false; \n \
-} \n \
-function query_mod(link, option) { \n \
-\n \
-return (option ? baseWIFI : base) + link.match(fiwn_keyword) + (option ? "" : param); \n \
-\n \
-} \n \
-function change_query_links() { \n \
-for (const url of document.links) {  \n \
-if (filter_link(url.href)) { \n \
-url.href = query_mod(url.href, document.querySelector("input[name="selector"]:checked").value); \n \
-} \n \
-} \n \
-}</script>';
+// TODO update if needed
+// const logic = '<script>function filter_link(link) {  \n \
+// if (link.match(fiwn_keyword) && link.classList.contains("keywords")) { \n \
+// console.log(link.match(fiwn_keyword)); \n \
+// return true; \n \
+// } \n \
+// return false; \n \
+// } \n \
+// function query_mod(link, option) { \n \
+// \n \
+// return (option ? baseWIFI : base) + link.match(fiwn_keyword) + (option ? "" : param); \n \
+// \n \
+// } \n \
+// function change_query_links() { \n \
+// for (const url of document.links) {  \n \
+// if (filter_link(url.href)) { \n \
+// url.href = query_mod(url.href, document.querySelector("input[name="selector"]:checked").value); \n \
+// } \n \
+// } \n \
+// }</script>';
 
-{/* <form name="ext_submit" id="ext_submit">click terms for search on form / stem with
-    <u><label for="FiWN-radio">wordnet (default)</label> 
-      <input type="radio" id="FiWN-radio" name="wifi_selector" value="false" onchange="change_query_links()" /> 
-      <label for="WIFI-radio">WIFI</label> 
-      <input type="radio" id="WIFI-radio" name="wifi_selector" value="true" onchange="change_query_links()"/></u>
-  </form> */}
+{
+  /* <form name="ext_submit" id="ext_submit">click terms for search on form / stem with
+      <u><label for="FiWN-radio">wordnet (default)</label> 
+        <input type="radio" id="FiWN-radio" name="wifi_selector" value="false" onchange="change_query_links()" /> 
+        <label for="WIFI-radio">WIFI</label> 
+        <input type="radio" id="WIFI-radio" name="wifi_selector" value="true" onchange="change_query_links()"/></u>
+    </form> */
+}
 
-const radio_selector = '<form name="ext_submit" id="ext_submit">click terms for search on form / stem with \
-<script>function filter_link(link) {  \n \
-if (!!link.match(fiwn_keyword)) { \n \
-console.log(link.match(fiwn_keyword)); \n \
-return true; \n \
-} \n \
-return false; \n \
-} \n \
-function query_mod(link, option) { \n \
-\n \
-return (option ? baseWIFI : base) + link.match(fiwn_keyword) + (option ? "" : param); \n \
-\n \
-} \n \
-function change_query_links() { \n \
-for (const url of document.links) {  \n \
-if (filter_link(url.href)) { \n \
-url.href = query_mod(url.href, document.querySelector("input[name="selector"]:checked").value); \n \
-} \n \
-} \n \
-} \
-</script> \
+const radio_selector = '<form name="ext_submit" id="ext_submit" action="javascript:change_query_links()">click terms for search on form / stem with \
 <u><label for="FiWN-radio">wordnet (default)</label>  \
-  <input type="radio" id="FiWN-radio" name="wifi_selector" value="false" checked="checked" onchange="change_query_links()" />  \
-  <label for="WIFI-radio">WIFI</label>  \
-  <input type="radio" id="WIFI-radio" name="wifi_selector" value="true" onchange="change_query_links()"/></u> \
+<input type="radio" id="FiWN-radio" name="wifi_selector" value="true" checked="checked" onchange="this.form.submit()" />  \
+<label for="WIFI-radio">WIFI</label>  \
+<input type="radio" id="WIFI-radio" name="wifi_selector" value="false" onchange="this.form.submit()"/></u> \
       </form>';
 
 // remontti in Finnish = Renovation
 // function page_remontti() { // One can find new ones on Kielipankki anyway https://www.kielipankki.fi/corpora/finnwordnet/
-function option_remontti() {
-  // document.querySelectorAll("a").forEach(url => {
-  // for (const paragraph of document.querySelectorAll('p')) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
-  // for (const paragraph of document.querySelectorAll('div')) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
-  if (filter_option(document.querySelectorAll('div')[0].innerHTML)) {
-    // document.querySelectorAll('div')[0].innerHTML = query_mod(url.href);
-    // } else if (filter_option(paragraph.innerText)) {
-    //   paragraph.innerHTML =
-    // }
-    // https://stackoverflow.com/questions/843680/how-to-replace-dom-element-in-place-using-javascript
-    document.querySelectorAll('div')[0].innerHTML = radio_selector; //replace...
-
-    // write logic
-    document.getElementsByTagName("script").innerHTML += logic;
-  }
-}
 
 function filter_option(div) {
   return (div === 'click terms for wordnet search on form / stem') ? true : false;
 }
 
-function filter_link(link) { // https://greasyfork.org/en/scripts/421673-get-all-links
-  if (!!link.match(fiwn_keyword)) {
-    console.log(link.match(fiwn_keyword));
+// Changed to linkElement to avoid ambiguity with its href
+function filter_link(linkElement) { // https://greasyfork.org/en/scripts/421673-get-all-links
+  if (!!linkElement.href.match(fiwn_keyword) || linkElement.classList.contains("keywords")) { // for modified URL
+    console.log(linkElement.href.match(fiwn_keyword));
     return true;
   }
   return false;
@@ -107,18 +75,25 @@ function filter_link(link) { // https://greasyfork.org/en/scripts/421673-get-all
 
 function query_mod(link, option) {
   // link = base.concat(link.match(fiwn_keyword), param);
-  return (option ? baseWIFI : base) + link.match(fiwn_keyword) + (option ? "" : param);
+  return (option ? base : baseWIFI) + link.match(fiwn_keyword) + (option ? param : ""); // the default is true, which somehow does not concern the checked box
 
 }
 
 function change_query_links() {
   // document.querySelectorAll("a").forEach(url => {
   for (const url of document.links) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
-    if (filter_link(url.href)) {
+    // if (filter_link(url.href)) {
+    if (filter_link(url)) { // for class, v0.3
       // url.href = query_mod(url.href, (glob) wifi);
       // https://stackoverflow.com/questions/43680464/have-populated-radio-buttons-want-to-use-submit-button-to-print-the-value-out?rq=3
       // https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
       url.href = query_mod(url.href, document.querySelector('input[name="wifi_selector"]:checked').value);
+
+      if (!url.classList.contains("keywords")) { // v0.3
+        // https://stackoverflow.com/questions/507138/how-to-add-a-class-to-a-given-element
+        url.classList.add("keywords"); // Because the original URL was no more
+        // url.className += "keywords"; // Compatibility?
+      }
     }
   }
 }
@@ -134,6 +109,23 @@ function enter_submit() {
       e.currentTarget.closest("fieldset").querySelectorAll("input")[0].click();
     }
   });
+}
+
+function option_remontti() {
+  // document.querySelectorAll("a").forEach(url => {
+  // for (const paragraph of document.querySelectorAll('p')) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
+  // for (const paragraph of document.querySelectorAll('div')) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
+  if (filter_option(document.querySelectorAll('div')[0].innerHTML)) {
+    // document.querySelectorAll('div')[0].innerHTML = query_mod(url.href);
+    // } else if (filter_option(paragraph.innerText)) {
+    //   paragraph.innerHTML =
+    // }
+    // https://stackoverflow.com/questions/843680/how-to-replace-dom-element-in-place-using-javascript
+    document.querySelectorAll('div')[0].innerHTML = radio_selector; //replace...
+
+    // write logic?
+    // document.getElementsByTagName("script").innerHTML += logic;
+  }
 }
 
 (function () {
