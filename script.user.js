@@ -74,7 +74,8 @@ url.href = query_mod(url.href, document.querySelector("input[name="selector"]:ch
   <input type="radio" id="WIFI-radio" name="wifi_selector" value="true" onchange="change_query_links()"/></u> \
       </form>';
 
-// function page_remontti() { // You can find new ones on Kielipankki anyway https://www.kielipankki.fi/corpora/finnwordnet/
+// remontti in Finnish = Renovation
+// function page_remontti() { // One can find new ones on Kielipankki anyway https://www.kielipankki.fi/corpora/finnwordnet/
 function option_remontti() {
   // document.querySelectorAll("a").forEach(url => {
   // for (const paragraph of document.querySelectorAll('p')) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
@@ -139,6 +140,6 @@ function enter_submit() {
   "use strict";
   // page_remontti(); // change invalid FiWN project link
   option_remontti(); // show whether the links are on wordnet or WIFI
-  // change_query_links(); // now part of option_remontti() and in-page HTML
+  change_query_links(); // default option
   enter_submit();
 })();
