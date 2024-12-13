@@ -69,9 +69,10 @@ function filter_option(div) {
 }
 
 // Changed to linkElement to avoid ambiguity with its href
-function filter_link(linkElement) { // https://greasyfork.org/en/scripts/421673-get-all-links
-  if (linkElement.href.match(fiwn_keyword) || linkElement.classList.contains("keywords")) { // for modified URL
+function filter_link(linkElement, clicked) { // https://greasyfork.org/en/scripts/421673-get-all-links
+  if ((!clicked && linkElement.href.match(fiwn_keyword)) || (clicked && linkElement.classList.contains("keywords"))) { // for modified URL
     console.log(linkElement.href.match(fiwn_keyword));
+    console.log(true);
     return true;
   }
   return false;
@@ -89,7 +90,7 @@ function change_query_links(clicked) {
   // document.querySelectorAll("a").forEach(url => {
   for (const url of document.links) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
     // if (filter_link(url.href)) {
-    if (filter_link(url)) { // for class, v0.3
+    if (filter_link(url, clicked)) { // for class, v0.3
       // url.href = query_mod(url.href, (glob) wifi);
       // https://stackoverflow.com/questions/43680464/have-populated-radio-buttons-want-to-use-submit-button-to-print-the-value-out?rq=3
       // https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
@@ -141,14 +142,15 @@ function option_remontti() {
   change_query_links(false); // default option
   enter_submit();
 
-  let radios = document.querySelectorAll('input[type="radio"]');
-  radios.forEach(btn => {
-    // https://stackoverflow.com/questions/14544104/checkbox-check-event-listener
-    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event
-    btn.addEventListener('change', change_query_links(true), false);
-    // btn.addEventListener('change', e => {
-    //   // Error if adding functions here
-    //   change_query_links(); // still not defined
-    // })
-  });
+  // regex yields null if added
+  // let radios = document.querySelectorAll('input[type="radio"]');
+  // radios.forEach(btn => {
+  //   // https://stackoverflow.com/questions/14544104/checkbox-check-event-listener
+  //   // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event
+  //   btn.addEventListener('change', change_query_links(true), false); // true? how to define change?
+  //   // btn.addEventListener('change', e => {
+  //   //   // Error if adding functions here
+  //   //   change_query_links(); // still not defined
+  //   // })
+  // });
 })();
