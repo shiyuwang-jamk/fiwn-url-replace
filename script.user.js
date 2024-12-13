@@ -50,7 +50,9 @@ const baseWIFI = "https://fi.wiktionary.org/wiki/";
     </form> */
 }
 
-const radio_selector = '<form name="ext_submit" id="ext_submit" action="javascript:change_query_links()">click terms for search on form / stem with \
+// const radio_selector = '<form name="ext_submit" id="ext_submit" action="javascript:change_query_links()">click terms for search on form / stem with \
+// why bother with submit if we are to use event listener instead
+const radio_selector = '<form>click terms for search on form / stem with \
 <u><label for="FiWN-radio">wordnet (default)</label>  \
 <input type="radio" id="FiWN-radio" name="wifi_selector" value="true" checked="checked" onchange="this.form.submit()" />  \
 <label for="WIFI-radio">WIFI</label>  \
@@ -134,4 +136,14 @@ function option_remontti() {
   option_remontti(); // show whether the links are on wordnet or WIFI
   change_query_links(); // default option
   enter_submit();
+
+  let radios = document.querySelectorAll('input[type="radio"]');
+  radios.forEach(btn => {
+    // https://stackoverflow.com/questions/14544104/checkbox-check-event-listener
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event
+    btn.addEventListener('change', e => {
+      // Error if adding functions here
+      change_query_links(); // still not defined
+    })
+  });
 })();
