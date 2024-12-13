@@ -10,11 +10,13 @@
 
 // const fiwn_regex = new RegExp(/^http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn/g);
 // v0.2.1: ä, ö escaped, should use % sign
-const fiwn_keyword = new RegExp(/(?<=http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn\/search\?wn=fi&w=)[\w%]+(?=&t=over&sm=Search)/g) // https://greasyfork.org/en/scripts/421673-get-all-links
+const fiwn_keyword = new RegExp(/(?<=http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn\/search\?wn=fi&w=)[\w%]+(?=&t=over&sm=Search)/g); // https://greasyfork.org/en/scripts/421673-get-all-links
 const base = "https://kielipankki.fi/cgi-bin/fiwn/fiwn.cgi?wn=fi&w=";
+const fiwn = new RegExp(/(?<=http:\/\/kielipankki.fi\/cgi-bin\/fiwn\/fiwn\.cgi\?wn=fi&w=)[\w%]+/g);
 const param = "&t=all&ver=&sm=Search";
 
 const baseWIFI = "https://fi.wiktionary.org/wiki/";
+const WIFIregex = new RegExp(/(?<=http:\/\/fi.wiktionary.org\/wiki\/)[\w%]+/g);
 // var wifi = true; // used radio tick box instead
 // var currentvalue = document.querySelector('input[name="selector"]:checked').value; not like this
 
@@ -50,9 +52,9 @@ const baseWIFI = "https://fi.wiktionary.org/wiki/";
     </form> */
 }
 
-// const radio_selector = '<form name="ext_submit" id="ext_submit" action="javascript:change_query_links()">click terms for search on form / stem with \
 // why bother with submit if we are to use event listener instead
-const radio_selector = '<form>click terms for search on form / stem with \
+// const radio_selector = '<form>click terms for search on form / stem with \
+const radio_selector = '<form name="ext_submit" id="ext_submit" action="javascript:change_query_links(true)">click terms for search on form / stem with \
 <u><label for="FiWN-radio">wordnet (default)</label>  \
 <input type="radio" id="FiWN-radio" name="wifi_selector" value="true" checked="checked" onchange="this.form.submit()" />  \
 <label for="WIFI-radio">WIFI</label>  \
@@ -68,20 +70,22 @@ function filter_option(div) {
 
 // Changed to linkElement to avoid ambiguity with its href
 function filter_link(linkElement) { // https://greasyfork.org/en/scripts/421673-get-all-links
-  if (!!linkElement.href.match(fiwn_keyword) || linkElement.classList.contains("keywords")) { // for modified URL
+  if (linkElement.href.match(fiwn_keyword) || linkElement.classList.contains("keywords")) { // for modified URL
     console.log(linkElement.href.match(fiwn_keyword));
     return true;
   }
   return false;
 }
 
-function query_mod(link, option) {
+// function query_mod(link, option) {
+function query_mod(link, option, clicked) {
   // link = base.concat(link.match(fiwn_keyword), param);
-  return (option ? base : baseWIFI) + link.match(fiwn_keyword) + (option ? param : ""); // the default is true, which somehow does not concern the checked box
+  // return (option ? base : baseWIFI) + link.match(fiwn_keyword) + (option ? param : ""); // the default is true, which somehow does not concern the checked box
+  return (option ? base : baseWIFI) + link.match(clicked ? (option ? fiwn : WIFIregex) : fiwn_keyword) + (option ? param : ""); // new keyword extraction v0.3
 
 }
 
-function change_query_links() {
+function change_query_links(clicked) {
   // document.querySelectorAll("a").forEach(url => {
   for (const url of document.links) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
     // if (filter_link(url.href)) {
@@ -89,7 +93,7 @@ function change_query_links() {
       // url.href = query_mod(url.href, (glob) wifi);
       // https://stackoverflow.com/questions/43680464/have-populated-radio-buttons-want-to-use-submit-button-to-print-the-value-out?rq=3
       // https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
-      url.href = query_mod(url.href, document.querySelector('input[name="wifi_selector"]:checked').value);
+      url.href = query_mod(url.href, document.querySelector('input[name="wifi_selector"]:checked').value, clicked);
 
       if (!url.classList.contains("keywords")) { // v0.3
         // https://stackoverflow.com/questions/507138/how-to-add-a-class-to-a-given-element
@@ -134,16 +138,17 @@ function option_remontti() {
   "use strict";
   // page_remontti(); // change invalid FiWN project link
   option_remontti(); // show whether the links are on wordnet or WIFI
-  change_query_links(); // default option
+  change_query_links(false); // default option
   enter_submit();
 
   let radios = document.querySelectorAll('input[type="radio"]');
   radios.forEach(btn => {
     // https://stackoverflow.com/questions/14544104/checkbox-check-event-listener
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event
-    btn.addEventListener('change', e => {
-      // Error if adding functions here
-      change_query_links(); // still not defined
-    })
+    btn.addEventListener('change', change_query_links(true), false);
+    // btn.addEventListener('change', e => {
+    //   // Error if adding functions here
+    //   change_query_links(); // still not defined
+    // })
   });
 })();
