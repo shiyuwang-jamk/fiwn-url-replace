@@ -9,7 +9,7 @@
 // ==/UserScript==
 
 // const fiwn_regex = new RegExp(/^http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn/g);
-// v0.3: ä, ö escaped, should use % sign
+// v0.2.1: ä, ö escaped, should use % sign
 const fiwn_keyword = new RegExp(/(?<=http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn\/search\?wn=fi&w=)[\w%]+(?=&t=over&sm=Search)/g) // https://greasyfork.org/en/scripts/421673-get-all-links
 const base = "https://kielipankki.fi/cgi-bin/fiwn/fiwn.cgi?wn=fi&w=";
 const param = "&t=all&ver=&sm=Search";
@@ -39,6 +39,13 @@ url.href = query_mod(url.href, document.querySelector("input[name="selector"]:ch
 } \n \
 } \n \
 }</script>';
+
+{/* <form name="ext_submit" id="ext_submit">click terms for search on form / stem with
+    <u><label for="FiWN-radio">wordnet (default)</label> 
+      <input type="radio" id="FiWN-radio" name="wifi_selector" value="false" onchange="change_query_links()" /> 
+      <label for="WIFI-radio">WIFI</label> 
+      <input type="radio" id="WIFI-radio" name="wifi_selector" value="true" onchange="change_query_links()"/></u>
+  </form> */}
 
 const radio_selector = '<form name="ext_submit" id="ext_submit">click terms for search on form / stem with \
 <script>function filter_link(link) {  \n \
