@@ -20,55 +20,6 @@ const WIFIregex = new RegExp(/(?<=http:\/\/fi.wiktionary.org\/wiki\/)[\w%]+/g);
 // var wifi = true; // used radio tick box instead
 // var currentvalue = document.querySelector('input[name="selector"]:checked').value; not like this
 
-// https://stackoverflow.com/questions/8104242/spread-html-in-multiple-lines-javascript
-
-// TODO update if needed
-// const logic = '<script>function filter_link(link) {  \n \
-// if (link.match(fiwn_keyword) && link.classList.contains("keywords")) { \n \
-// console.log(link.match(fiwn_keyword)); \n \
-// return true; \n \
-// } \n \
-// return false; \n \
-// } \n \
-// function query_mod(link, option) { \n \
-// \n \
-// return (option ? baseWIFI : base) + link.match(fiwn_keyword) + (option ? "" : param); \n \
-// \n \
-// } \n \
-// function change_query_links() { \n \
-// for (const url of document.links) {  \n \
-// if (filter_link(url.href)) { \n \
-// url.href = query_mod(url.href, document.querySelector("input[name="selector"]:checked").value); \n \
-// } \n \
-// } \n \
-// }</script>';
-
-{
-  /* <form name="ext_submit" id="ext_submit">click terms for search on form / stem with
-      <u><label for="FiWN-radio">wordnet (default)</label> 
-        <input type="radio" id="FiWN-radio" name="wifi_selector" value="false" onchange="change_query_links()" /> 
-        <label for="WIFI-radio">WIFI</label> 
-        <input type="radio" id="WIFI-radio" name="wifi_selector" value="true" onchange="change_query_links()"/></u>
-    </form> */
-}
-
-// why bother with submit if we are to use event listener instead
-// const radio_selector = '<form>click terms for search on form / stem with \
-// Default variable value is true, hence renamed to selector 
-const radio_selector = '<form name="ext_submit" id="ext_submit" action="javascript:change_query_links(true)">click terms for search on form / stem with \
-<u><label for="FiWN-radio">wordnet (default)</label>  \
-<input type="radio" id="FiWN-radio" name="selector" value="true" checked="checked" onchange="this.form.submit()" />  \
-<label for="WIFI-radio">WIFI</label>  \
-<input type="radio" id="WIFI-radio" name="selector" value="false" onchange="this.form.submit()"/></u> \
-      </form>';
-
-// remontti in Finnish = Renovation
-// function page_remontti() { // One can find new ones on Kielipankki anyway https://www.kielipankki.fi/corpora/finnwordnet/
-
-function filter_option(div) {
-  return (div === 'click terms for wordnet search on form / stem') ? true : false;
-}
-
 // Changed to linkElement to avoid ambiguity with its href
 function filter_link(linkElement, clicked) { // https://greasyfork.org/en/scripts/421673-get-all-links
   if ((!clicked && linkElement.href.match(fiwn_keyword)) || (clicked && linkElement.classList.contains("keywords"))) { // for modified URL
@@ -119,7 +70,31 @@ function enter_submit() {
   });
 }
 
+function filter_option(div) {
+  return (div === 'click terms for wordnet search on form / stem') ? true : false;
+}
+
+// remontti in Finnish = Renovation
+// function page_remontti() { // One can find new ones on Kielipankki anyway https://www.kielipankki.fi/corpora/finnwordnet/
 function option_remontti() {
+
+  // why bother with submit if we are to use event listener instead
+  // const radio_selector = '<form>click terms for search on form / stem with \
+  // https://stackoverflow.com/questions/8104242/spread-html-in-multiple-lines-javascript
+  // Default variable value is true, hence renamed to selector 
+  const radio_selector = '<form name="ext_submit" id="ext_submit" action="javascript:change_query_links(true)">click terms for search on form / stem with \
+          <u><label for="FiWN-radio">wordnet (default)</label>  \
+          <input type="radio" id="FiWN-radio" name="selector" value="true" checked="checked" onchange="this.form.submit()" />  \
+          <label for="WIFI-radio">WIFI</label>  \
+          <input type="radio" id="WIFI-radio" name="selector" value="false" onchange="this.form.submit()"/></u> \
+          </form>'; {
+    /* <form name="ext_submit" id="ext_submit">click terms for search on form / stem with
+        <u><label for="FiWN-radio">wordnet (default)</label> 
+          <input type="radio" id="FiWN-radio" name="selector" value="true" onchange="change_query_links()" /> 
+          <label for="WIFI-radio">WIFI</label> 
+          <input type="radio" id="WIFI-radio" name="selector" value="false" onchange="change_query_links()"/></u>
+      </form> */
+  }
   // document.querySelectorAll("a").forEach(url => {
   // for (const paragraph of document.querySelectorAll('p')) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
   // for (const paragraph of document.querySelectorAll('div')) { // https://developer.mozilla.org/en-US/docs/Web/API/Document/links
