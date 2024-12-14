@@ -54,11 +54,12 @@ const WIFIregex = new RegExp(/(?<=http:\/\/fi.wiktionary.org\/wiki\/)[\w%]+/g);
 
 // why bother with submit if we are to use event listener instead
 // const radio_selector = '<form>click terms for search on form / stem with \
+// Default variable value is true, hence renamed to selector 
 const radio_selector = '<form name="ext_submit" id="ext_submit" action="javascript:change_query_links(true)">click terms for search on form / stem with \
 <u><label for="FiWN-radio">wordnet (default)</label>  \
-<input type="radio" id="FiWN-radio" name="wifi_selector" value="true" checked="checked" onchange="this.form.submit()" />  \
+<input type="radio" id="FiWN-radio" name="selector" value="true" checked="checked" onchange="this.form.submit()" />  \
 <label for="WIFI-radio">WIFI</label>  \
-<input type="radio" id="WIFI-radio" name="wifi_selector" value="false" onchange="this.form.submit()"/></u> \
+<input type="radio" id="WIFI-radio" name="selector" value="false" onchange="this.form.submit()"/></u> \
       </form>';
 
 // remontti in Finnish = Renovation
@@ -94,7 +95,7 @@ function change_query_links(clicked) {
       // url.href = query_mod(url.href, (glob) wifi);
       // https://stackoverflow.com/questions/43680464/have-populated-radio-buttons-want-to-use-submit-button-to-print-the-value-out?rq=3
       // https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
-      url.href = query_mod(url.href, document.querySelector('input[name="wifi_selector"]:checked').value, clicked);
+      url.href = query_mod(url.href, document.querySelector('input[name="selector"]:checked').value, clicked);
 
       if (!url.classList.contains("keywords")) { // v0.3
         // https://stackoverflow.com/questions/507138/how-to-add-a-class-to-a-given-element
