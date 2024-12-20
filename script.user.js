@@ -1,19 +1,15 @@
 // ==UserScript==
-// @name         New FinnWordNet from HFST omor demo
+// @name         Finnish Wikidictionary from HFST omor demo
 // @namespace    http://tampermonkey.net/
-// @version      0.2.1
-// @description  Replace invalid FinnWordNet query link in the demo with valid ones.
+// @version      WIFI
+// @description  Replace invalid FinnWordNet query link in the demo with Finnish Wikidictionary.
 // @author       shiyuwang
 // @match        https://kielipankki.fi/cgi-bin/omor/omordemo.bash*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // ==/UserScript==
 
-// const fiwn_regex = new RegExp(/^http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn/g);
-
-// v0.2.1: ä, ö escaped, use % instead
 const fiwn_keyword = new RegExp(/(?<=http:\/\/kielipankki-tools.dy.fi\/cgi-bin\/fiwn\/search\?wn=fi&w=)[\w%]+(?=&t=over&sm=Search)/g) // https://greasyfork.org/en/scripts/421673-get-all-links
-const base = "https://kielipankki.fi/cgi-bin/fiwn/fiwn.cgi?wn=fi&w=";
-const param = "&t=all&ver=&sm=Search";
+const base = "https://fi.wiktionary.org/wiki/";
 
 function filter_link(link) { // https://greasyfork.org/en/scripts/421673-get-all-links
   if (!!link.match(fiwn_keyword)) {
@@ -24,10 +20,11 @@ function filter_link(link) { // https://greasyfork.org/en/scripts/421673-get-all
 }
 
 function fiwn_mod(link) {
-    // link = base.concat(link.match(fiwn_keyword), param);
-    return link = base + link.match(fiwn_keyword) + param;
-    // link.href = link.href.replace( "http://kielipankki-tools.dy.fi", "https://kielipankki.fi" ).replace("search?wn=fi&w=", "fiwn.cgi?wn=fi&w=").replace("&t=over&sm=Search", "&t=all&ver=&sm=Search");
+    return base + link.match(fiwn_keyword);
+}
 
+function filter_option(div) {
+  return (div === 'click terms for wordnet search on form / stem') ? true : false;
 }
 
 function change_links() {
@@ -36,6 +33,18 @@ function change_links() {
         if (filter_link(url.href)) {
             url.href = fiwn_mod(url.href);
         }
+  }
+
+  if (filter_option(document.querySelectorAll('div')[0].innerHTML)) {
+    // document.querySelectorAll('div')[0].innerHTML = query_mod(url.href);
+    // } else if (filter_option(paragraph.innerText)) {
+    //   paragraph.innerHTML =
+    // }
+    // https://stackoverflow.com/questions/843680/how-to-replace-dom-element-in-place-using-javascript
+    document.querySelectorAll('div')[0].innerHTML = "click terms for <b>Finnish Wikidictionary</b> search on form / stem"; //replace...
+
+    // write logic?
+    // document.getElementsByTagName("script").innerHTML += logic;
   }
 }
 
