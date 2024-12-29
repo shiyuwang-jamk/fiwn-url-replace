@@ -6,6 +6,6 @@
 - [ ] Make page responsive for mobile and bigger screens
 - [ ] Add CSS for typeface, color, creative styling
 ## Parsing result text
-- [ ] Find list of symbols used
+- [ ] Find list of tags used
 - [ ] Split result string
 - [ ] In case of compound word: new link for following words
